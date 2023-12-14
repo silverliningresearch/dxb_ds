@@ -45,7 +45,7 @@ function notDeparted_flight_search(flight_time) {
   //plus  3 hour
   flight_time_value = flight_time_value + 180;
 
-  var result = (flight_time_value > current_time_value);
+  var result = true;//= (flight_time_value > current_time_value);
   //var result = true; //skip this check as requested by BUD team
   return (result);
 }
