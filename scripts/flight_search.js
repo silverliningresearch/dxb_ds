@@ -18,6 +18,20 @@ function getToDate() {
   return [day, month,year].join('-');
 }
 
+function getTomorrow() {
+  var d = new Date();
+      
+  month = '' + (d.getMonth() + 1),
+  day = '' + (d.getDate()+1),
+  year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [day, month, year].join('-');
+}
 function flight_in_list_found(list, item) {
   item = item.toLowerCase();
   
@@ -59,8 +73,8 @@ function load_flight_list() {
 
   for (i = 0; i < flightRawList.length; i++) {
     var flight = flightRawList[i];
-    if ((flight.Date == getToDate() && notDeparted_flight_search(flight.Time)) //today flight && departure
-    ) 
+    if (((flight.Date == getToDate()) && notDeparted_flight_search(flight.Time)) //today flight && departure
+        || (flight.Date == getTomorrow()))
     {
       {
         var Date = '"Date"' + ":" + '"' +  flightRawList[i].Date + '", ';
@@ -86,8 +100,19 @@ function load_flight_list() {
         Show +=")";
 
         var str = '{' + Date + Time + AirlineCode + Airline + Flight +  Dest + DestName + Via + ViaName +  Show + '"}';
-      
-        flightList.push(JSON.parse(str));
+        
+        var item  = JSON.parse(str);
+        //avoid duplication
+        var found = false;
+        for (j = 0; j < flightList.length; j++) {
+          if (item.Show == flightList[j].Show) {
+            found = true;
+          }
+        }
+
+        if (!found) {
+          flightList.push(item);
+        }
       }
     }
   }
